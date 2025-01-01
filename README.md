@@ -6,12 +6,12 @@ Create the following directory structure:
 
 project/
 |
-├──> public/
+├──> [ public/
 │   ├──> index.html
-│   ├──> style.css
+│   ├──> style.css ]
 |
-├──> data/
-│   ├──> links.json
+├──>[ data/
+│   ├──> links.json ]
 |
 ├──> server.js
 |
