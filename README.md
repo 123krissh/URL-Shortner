@@ -5,9 +5,13 @@ How to Run
 Create the following directory structure:
 
 project/
-├── public/
-│   ├── index.html
-│   ├── style.css
-├── data/
-│   ├── links.json
-├── server.js
+|
+├──> public/
+│   ├──> index.html
+│   ├──> style.css
+|
+├──> data/
+│   ├──> links.json
+|
+├──> server.js
+|
