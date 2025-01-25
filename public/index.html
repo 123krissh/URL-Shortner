@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./style.css">
+    <title>URL Shortner</title>
+</head>
+<body>
+    <div class="container">
+        <h1 class="h1u">URL Shortner</h1>
+        <form id="shorten-form">
+            <div class="url123">
+                <label for="url">Enter URL</label>
+                <input type="url" name="url" id="url" required>
+            </div>
+            <div class="url123">
+                <label for="shortUrl">Enter short URL</label>
+                <input type="text" name="shortUrl" id="shortUrl" required>
+            </div>
+            <button type="submit">Short</button>
+        </form>
+        <h2 class="h2">Shortend Urls</h2>
+        <ul id="Shortened-urls"></ul>
+    </div>
+
+    <script>
+
+        const fetchShortenedURL = async () => {
+
+             // Fetch all shortened URLs from the backend
+            const response = await fetch("/links");
+            const links = await response.json();
+            console.log("links ", links);
+            
+            const list = document.getElementById("Shortened-urls");
+            list.innerHTML = "";
+
+            // Iterate over the fetched links and display them
+
+            for (const [shortUrl, url] of Object.entries(links)) {
+                const li = document.createElement('li');
+                const truncatedURL = url.length >= 30 ? `${url.slice(0,30)}...` : url;
+                li.innerHTML = `<a href="/${shortUrl}" target="_blank">${window.location.origin}/${shortUrl}</a> - ${truncatedURL}`
+                list.appendChild(li);
+                
+            }
+        };
+
+        document.getElementById('shorten-form').addEventListener('submit', async (event) => {
+            event.preventDefault();
+
+            const formData = new FormData(event.target);
+            const url = formData.get('url');
+            const shortUrl = formData.get('shortUrl');
+            console.log(url, shortUrl);
+
+            try {
+               const response = await fetch("/short", {
+                method : "POST",
+                headers : {"Content-Type": "application/json"},
+                body: JSON.stringify({url, shortUrl})
+               });
+               if (response.ok) {
+                // Refresh the shortened URLs list
+                fetchShortenedURL();
+                alert("URL shortened successfully");
+                event.target.reset();
+               } else {
+                const errorMessage = await response.text();
+                alert(errorMessage);
+               }
+            } catch (error) {
+                console.error(error);
+            }
+            
+        });
+
+           // Fetch and display shortened URLs on page load
+
+        fetchShortenedURL();
+    </script>
+
+
+</body>
+</html>
